@@ -2,68 +2,57 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fashion Zone | الاختبار الثاني</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>تجربة نظام تأكيد فودافون كاش</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap');
-        body { font-family: 'Cairo', sans-serif; background-color: #0f172a; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .gradient-text { background: linear-gradient(90deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4f4f4; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-size: 18px; }
+        button { background: #e60000; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        #result { margin-top: 20px; font-weight: bold; }
+        .success { color: green; }
+        .error { color: red; }
     </style>
 </head>
-<body class="text-white min-h-screen flex flex-col items-center justify-center p-6">
+<body>
 
-    <header class="fixed top-0 w-full p-6 flex justify-between items-center glass z-50">
-        <div class="text-2xl font-bold gradient-text">FASHION ZONE</div>
-        <nav class="space-x-reverse space-x-6 hidden md:flex">
-            <a href="#" class="hover:text-indigo-400 transition">الرئيسية</a>
-            <a href="#" class="hover:text-indigo-400 transition">المتجر</a>
-            <a href="#" class="hover:text-indigo-400 transition">عنّا</a>
-        </nav>
-    </header>
+<div class="container">
+    <h2>تأكيد عملية الدفع</h2>
+    <p>أدخل رقم العملية المكون من 10 أرقام:</p>
+    <input type="text" id="transactionInput" placeholder="0000000000" maxlength="10">
+    <button onclick="checkTransaction()">تأكيد الدفع</button>
+    <div id="result"></div>
+</div>
 
-    <main class="text-center mt-20">
-        <div class="inline-block px-4 py-1 mb-6 text-sm font-medium text-indigo-300 glass rounded-full">
-            تم بنجاح ربط الدومين: fashionzooon.work.gd ✨
-        </div>
-        
-        <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            مرحباً بك في النسخة <br> 
-            <span class="gradient-text">الاحترافية الثانية</span>
-        </h1>
-        
-        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10">
-            هذا الكود هو مجرد تجربة ثانية للتأكد من سرعة استجابة الموقع وتحديث الملفات. يمكنك الآن إضافة منتجاتك وصورك الخاصة هنا.
-        </p>
+<script>
+    // 1. الأرقام المجهزة للتجربة
+    const blockedNumbers = ["1234567890"]; // رقم مستخدم مسبقاً (في القائمة السوداء)
+    const validNumber = "0987654321";    // رقم جديد (متاح للاستخدام)
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full mt-10">
-            <div class="glass p-6 rounded-3xl hover:scale-105 transition-transform cursor-pointer">
-                <div class="h-48 bg-indigo-500/20 rounded-2xl mb-4 flex items-center justify-center">👕</div>
-                <h3 class="font-bold text-xl mb-2">قميص عصري</h3>
-                <p class="text-indigo-400 font-bold">450 EGP</p>
-            </div>
-            <div class="glass p-6 rounded-3xl hover:scale-105 transition-transform cursor-pointer border-indigo-500/50">
-                <div class="h-48 bg-indigo-500/20 rounded-2xl mb-4 flex items-center justify-center">👗</div>
-                <h3 class="font-bold text-xl mb-2">فستان سهرة</h3>
-                <p class="text-indigo-400 font-bold">1200 EGP</p>
-            </div>
-            <div class="glass p-6 rounded-3xl hover:scale-105 transition-transform cursor-pointer">
-                <div class="h-48 bg-indigo-500/20 rounded-2xl mb-4 flex items-center justify-center">👟</div>
-                <h3 class="font-bold text-xl mb-2">حذاء كاجوال</h3>
-                <p class="text-indigo-400 font-bold">850 EGP</p>
-            </div>
-        </div>
+    function checkTransaction() {
+        const input = document.getElementById('transactionInput').value;
+        const resultDiv = document.getElementById('result');
 
-        <div class="mt-16 flex gap-4 justify-center">
-            <button class="bg-indigo-600 hover:bg-indigo-700 px-8 py-3 rounded-full font-bold transition">ابدأ التسوق</button>
-            <button class="glass px-8 py-3 rounded-full font-bold hover:bg-white/10 transition">تواصل معنا</button>
-        </div>
-    </main>
+        // التأكد من أن الإدخال 10 أرقام
+        if (input.length !== 10 || isNaN(input)) {
+            resultDiv.innerHTML = "<span class='error'>خطأ: يجب إدخال 10 أرقام صحيحة!</span>";
+            return;
+        }
 
-    <footer class="mt-20 text-gray-500 text-sm">
-        جميع الحقوق محفوظة لـ Fashion Zone &copy; 2026
-    </footer>
+        // 2. التحقق من "قائمة البلوك"
+        if (blockedNumbers.includes(input)) {
+            resultDiv.innerHTML = `<span class='error'>عفواً! العملية ${input} مرفوضة. هذا الرقم تم استخدامه في عملية شراء سابقة.</span>`;
+        } 
+        // 3. التحقق مما إذا كان هو الرقم الصحيح المتاح
+        else if (input === validNumber) {
+            resultDiv.innerHTML = `<span class='success'>تم التأكيد! الرقم ${input} صحيح ولم يستخدم من قبل. جارٍ إتمام الشراء...</span>`;
+            // في الواقع، هنا يتم إضافة الرقم للقائمة السوداء فوراً
+            blockedNumbers.push(input); 
+        } 
+        else {
+            resultDiv.innerHTML = "<span class='error'>رقم العملية غير صحيح أو لم يصلنا إشعار به بعد.</span>";
+        }
+    }
+</script>
 
 </body>
 </html>
