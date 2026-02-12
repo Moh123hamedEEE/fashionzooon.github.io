@@ -3,60 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقعي التجريبي | AI Generated</title>
+    <title>Fashion Zone | الاختبار الثاني</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-        body { font-family: 'Cairo', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #0f172a; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(90deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="text-white min-h-screen flex flex-col items-center justify-center p-6">
 
-    <nav class="p-6 flex justify-between items-center bg-gray-800 shadow-lg">
-        <div class="text-2xl font-bold text-blue-400">تجربة ذكاء اصطناعي</div>
-        <ul class="flex gap-6">
-            <li><a href="#" class="hover:text-blue-400 transition">الرئيسية</a></li>
-            <li><a href="#" class="hover:text-blue-400 transition">أعمالي</a></li>
-            <li><a href="#" class="hover:text-blue-400 transition">اتصل بي</a></li>
-        </ul>
-    </nav>
-
-    <header class="h-screen flex flex-col justify-center items-center text-center px-4">
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            أهلاً بك في موقعي الأول!
-        </h1>
-        <p class="text-gray-400 text-xl max-w-2xl">
-            هذا الموقع تم إنشاؤه لتجربة استضافة GitHub Pages وربط الدومين المجاني. 
-            التصميم متجاوب ويعمل على جميع الشاشات.
-        </p>
-        <div class="mt-8 flex gap-4">
-            <button class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full font-bold transition">ابدأ الآن</button>
-            <button class="border border-blue-400 px-8 py-3 rounded-full font-bold hover:bg-blue-400 hover:text-gray-900 transition">تعرف عليّ</button>
-        </div>
+    <header class="fixed top-0 w-full p-6 flex justify-between items-center glass z-50">
+        <div class="text-2xl font-bold gradient-text">FASHION ZONE</div>
+        <nav class="space-x-reverse space-x-6 hidden md:flex">
+            <a href="#" class="hover:text-indigo-400 transition">الرئيسية</a>
+            <a href="#" class="hover:text-indigo-400 transition">المتجر</a>
+            <a href="#" class="hover:text-indigo-400 transition">عنّا</a>
+        </nav>
     </header>
 
-    <section class="py-20 bg-gray-800">
-        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div class="bg-gray-700 p-8 rounded-2xl text-center hover:transform hover:scale-105 transition">
-                <div class="text-4xl mb-4">🚀</div>
-                <h3 class="text-xl font-bold mb-2">سرعة فائقة</h3>
-                <p class="text-gray-400">مستضاف على سيرفرات GitHub العالمية.</p>
+    <main class="text-center mt-20">
+        <div class="inline-block px-4 py-1 mb-6 text-sm font-medium text-indigo-300 glass rounded-full">
+            تم بنجاح ربط الدومين: fashionzooon.work.gd ✨
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            مرحباً بك في النسخة <br> 
+            <span class="gradient-text">الاحترافية الثانية</span>
+        </h1>
+        
+        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+            هذا الكود هو مجرد تجربة ثانية للتأكد من سرعة استجابة الموقع وتحديث الملفات. يمكنك الآن إضافة منتجاتك وصورك الخاصة هنا.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full mt-10">
+            <div class="glass p-6 rounded-3xl hover:scale-105 transition-transform cursor-pointer">
+                <div class="h-48 bg-indigo-500/20 rounded-2xl mb-4 flex items-center justify-center">👕</div>
+                <h3 class="font-bold text-xl mb-2">قميص عصري</h3>
+                <p class="text-indigo-400 font-bold">450 EGP</p>
             </div>
-            <div class="bg-gray-700 p-8 rounded-2xl text-center hover:transform hover:scale-105 transition">
-                <div class="text-4xl mb-4">🔒</div>
-                <h3 class="text-xl font-bold mb-2">أمان عالي</h3>
-                <p class="text-gray-400">تشفير SSL مجاني تماماً لحماية بياناتك.</p>
+            <div class="glass p-6 rounded-3xl hover:scale-105 transition-transform cursor-pointer border-indigo-500/50">
+                <div class="h-48 bg-indigo-500/20 rounded-2xl mb-4 flex items-center justify-center">👗</div>
+                <h3 class="font-bold text-xl mb-2">فستان سهرة</h3>
+                <p class="text-indigo-400 font-bold">1200 EGP</p>
             </div>
-            <div class="bg-gray-700 p-8 rounded-2xl text-center hover:transform hover:scale-105 transition">
-                <div class="text-4xl mb-4">🎨</div>
-                <h3 class="text-xl font-bold mb-2">تصميم مرن</h3>
-                <p class="text-gray-400">سهولة التعديل باستخدام Tailwind CSS.</p>
+            <div class="glass p-6 rounded-3xl hover:scale-105 transition-transform cursor-pointer">
+                <div class="h-48 bg-indigo-500/20 rounded-2xl mb-4 flex items-center justify-center">👟</div>
+                <h3 class="font-bold text-xl mb-2">حذاء كاجوال</h3>
+                <p class="text-indigo-400 font-bold">850 EGP</p>
             </div>
         </div>
-    </section>
 
-    <footer class="p-10 text-center border-t border-gray-700">
-        <p class="text-gray-500">تمت البرمجة بواسطة Gemini AI &copy; 2026</p>
+        <div class="mt-16 flex gap-4 justify-center">
+            <button class="bg-indigo-600 hover:bg-indigo-700 px-8 py-3 rounded-full font-bold transition">ابدأ التسوق</button>
+            <button class="glass px-8 py-3 rounded-full font-bold hover:bg-white/10 transition">تواصل معنا</button>
+        </div>
+    </main>
+
+    <footer class="mt-20 text-gray-500 text-sm">
+        جميع الحقوق محفوظة لـ Fashion Zone &copy; 2026
     </footer>
 
 </body>
