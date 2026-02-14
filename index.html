@@ -53,7 +53,7 @@
 
         // المسار هنا: اسم الـ Bucket / رقم العملية
         // استبدل 'Auto_Fox' بالاسم الذي وضعته في Kodular Project Bucket
-        database.ref('Auto_Fox/' + trxId).once('value').then((snapshot) => {
+        database.ref('/' + trxId).once('value').then((snapshot) => {
             if (snapshot.exists() && snapshot.val() === "verified") {
                 msgDiv.innerText = "✅ تم التأكد! جاري تحويلك...";
                 msgDiv.className = "status success";
