@@ -150,7 +150,7 @@
         const trxId = document.getElementById('trx-id').value;
         if(!trxId) return alert("اكتب رقم العملية!");
 
-        const ref = rtdb.ref('Auto_Fox/' + trxId);
+        const ref = rtdb.ref('' + trxId);
         const snap = await ref.once('value');
 
         if(snap.exists() && snap.val() === "verified") {
