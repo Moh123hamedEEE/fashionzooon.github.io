@@ -3,69 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد عملية الدفع - Fashion Zone</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <title>Fashion Zone | Pro System</title>
     
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        h2 { color: #333; margin-bottom: 1.5rem; }
-        input { width: 90%; padding: 12px; margin-bottom: 1rem; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s; }
-        input:focus { border-color: #6c5ce7; }
-        button { width: 100%; padding: 12px; background-color: #6c5ce7; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: background 0.3s; }
-        button:hover { background-color: #a29bfe; }
-        .status { margin-top: 1rem; font-weight: bold; }
-        .success { color: #27ae60; }
-        .error { color: #e74c3c; }
+        :root { --main: #2d3436; --accent: #00b894; --danger: #d63031; --bg: #f0f2f5; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 10px; }
+        .container { max-width: 550px; margin: 30px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .hidden { display: none !important; }
+        input, button { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
+        button { background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { opacity: 0.85; transform: translateY(-1px); }
+        nav { display: flex; justify-content: space-around; margin-bottom: 25px; background: #eee; padding: 8px; border-radius: 12px; }
+        nav span { cursor: pointer; color: #555; padding: 8px 15px; border-radius: 8px; transition: 0.2s; }
+        nav span.active { background: white; color: var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .order-card { border-right: 5px solid var(--accent); padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #fff; border: 1px solid #eee; }
+        .status { font-size: 12px; padding: 3px 8px; border-radius: 5px; background: #e8f5e9; color: #2e7d32; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>تأكيد دفع فاشون زون</h2>
-    <p>أدخل رقم العملية المرسل إليك</p>
-    <input type="text" id="trxId" placeholder="مثلاً: 123456789">
-    <button onclick="verifyPayment()">تأكيد الآن</button>
-    <div id="message" class="status"></div>
+<div class="container">
+    <h2 style="text-align: center; color: var(--main);">Fashion Zone 👕</h2>
+    
+    <nav id="main-nav" class="hidden">
+        <span id="tab-user" class="active" onclick="showTab('user')">طلب أوردر</span>
+        <span id="tab-admin" class="hidden" onclick="showTab('admin')">لوحة المسؤول 🔒</span>
+        <span onclick="logout()" style="color: var(--danger);">خروج</span>
+    </nav>
+
+    <div id="auth-section">
+        <h3 id="auth-title">تسجيل دخول</h3>
+        <input type="email" id="email" placeholder="البريد الإلكتروني">
+        <input type="password" id="pass" placeholder="كلمة المرور">
+        
+        <div id="extra-fields" class="hidden">
+            <input type="text" id="phone" placeholder="رقم الموبايل (أساسي)">
+            <input type="text" id="address" placeholder="عنوان الشحن (أساسي)">
+        </div>
+
+        <button id="btn-login" onclick="login()">دخول</button>
+        <button id="btn-signup" class="hidden" onclick="signUp()">إنشاء الحساب</button>
+        
+        <p id="toggle-text" onclick="toggleAuth()" style="cursor:pointer; color: #0984e3; text-align: center; font-size: 14px; margin-top: 15px;">ليس لديك حساب؟ اشترك الآن</p>
+    </div>
+
+    <div id="user-section" class="hidden">
+        <p style="font-size: 14px; color: #666; text-align: center;">مرحباً! يمكنك تعديل بيانات هذا الطلب فقط إذا أردت.</p>
+        <input type="text" id="order-items" placeholder="اسم المنتج / اللون / المقاس">
+        <input type="text" id="order-phone" placeholder="رقم الموبايل لهذا الأوردر">
+        <input type="text" id="order-address" placeholder="عنوان الشحن لهذا الأوردر">
+        <hr>
+        <p style="font-weight: bold;">تأكيد رقم المعاملة (Firebase):</p>
+        <input type="text" id="trx-id" placeholder="ادخل الرقم الظاهر في الرسالة">
+        <button onclick="submitOrder()">تأكيد وإرسال الطلب</button>
+    </div>
+
+    <div id="admin-section" class="hidden">
+        <h3 style="color: var(--danger);">لوحة تحكم المدير 🔒</h3>
+        <div id="orders-list">جاري تحميل أوردرات العملاء...</div>
+    </div>
 </div>
 
 <script>
-    // ضع بياناتك هنا من Firebase Console
+    // --- إعدادات فايربيس (تأكد من وضع بياناتك هنا) ---
     const firebaseConfig = {
-        apiKey: "AIzaSyCNdvbhCQZ6Hp9GI36DeMvMvJScfx38Cwk",
+        apiKey: "AIzaSyCNdvbhCQZ6Hp9GI36DeMvMvJScfx38Cwk", 
         databaseURL: "https://auto-fox-mohammed-default-rtdb.firebaseio.com",
         projectId: "auto-fox-mohammed",
+        authDomain: "auto-fox-mohammed.firebaseapp.com"
     };
-    
+
+    // --- إيميل المدير ---
+    const ADMIN_EMAIL = "ham123mada2010@gmail.com"; // 👈 غير هذا لإيميلك
+
     firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const rtdb = firebase.database();
 
-    function verifyPayment() {
-        const trxId = document.getElementById('trxId').value;
-        const msgDiv = document.getElementById('message');
+    function toggleAuth() {
+        const isLogin = !document.getElementById('btn-login').classList.contains('hidden');
+        document.getElementById('extra-fields').classList.toggle('hidden');
+        document.getElementById('btn-login').classList.toggle('hidden');
+        document.getElementById('btn-signup').classList.toggle('hidden');
+        document.getElementById('auth-title').innerText = isLogin ? "حساب جديد" : "تسجيل دخول";
+        document.getElementById('toggle-text').innerText = isLogin ? "لديك حساب؟ سجل دخول" : "اشترك الآن";
+    }
 
-        if(!trxId) {
-            msgDiv.innerText = "يرجى إدخال الرقم أولاً!";
-            msgDiv.className = "status error";
-            return;
-        }
+    function showTab(tab) {
+        document.getElementById('user-section').classList.toggle('hidden', tab !== 'user');
+        document.getElementById('admin-section').classList.toggle('hidden', tab !== 'admin');
+        document.getElementById('tab-user').classList.toggle('active', tab === 'user');
+        document.getElementById('tab-admin').classList.toggle('active', tab === 'admin');
+        if(tab === 'admin') loadOrders();
+    }
 
-        // المسار هنا: اسم الـ Bucket / رقم العملية
-        // استبدل 'Auto_Fox' بالاسم الذي وضعته في Kodular Project Bucket
-        database.ref('/' + trxId).once('value').then((snapshot) => {
-            if (snapshot.exists() && snapshot.val() === "verified") {
-                msgDiv.innerText = "✅ تم التأكد! جاري تحويلك...";
-                msgDiv.className = "status success";
-                // هنا تضع رابط صفحة النجاح
-                // window.location.href = "success.html"; 
-            } else {
-                msgDiv.innerText = "❌ الرقم غير صحيح أو لم يصل بعد.";
-                msgDiv.className = "status error";
+    // --- تسجيل وحساب ---
+    function signUp() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+        auth.createUserWithEmailAndPassword(email, pass).then(res => {
+            db.collection("Users").doc(res.user.uid).set({
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value
+            });
+            alert("تم الاشتراك بنجاح!");
+        }).catch(err => alert(err.message));
+    }
+
+    function login() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+        auth.signInWithEmailAndPassword(email, pass).catch(err => alert("بيانات خاطئة"));
+    }
+
+    function logout() { auth.signOut().then(() => location.reload()); }
+
+    // --- مراقبة الدخول وتحديد الصلاحيات ---
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('main-nav').classList.remove('hidden');
+            document.getElementById('user-section').classList.remove('hidden');
+            
+            // إظهار لوحة المدير للمدير فقط
+            if(user.email === ADMIN_EMAIL) {
+                document.getElementById('tab-admin').classList.remove('hidden');
             }
+
+            db.collection("Users").doc(user.uid).get().then(doc => {
+                if(doc.exists()){
+                    document.getElementById('order-phone').value = doc.data().phone;
+                    document.getElementById('order-address').value = doc.data().address;
+                }
+            });
+        }
+    });
+
+    // --- إرسال الطلب ومنع التكرار ---
+    async function submitOrder() {
+        const trxId = document.getElementById('trx-id').value;
+        if(!trxId) return alert("اكتب رقم العملية!");
+
+        const ref = rtdb.ref('Auto_Fox/' + trxId);
+        const snap = await ref.once('value');
+
+        if(snap.exists() && snap.val() === "verified") {
+            // 1. حفظ في Firestore
+            await db.collection("Orders").add({
+                email: auth.currentUser.email,
+                items: document.getElementById('order-items').value,
+                phone: document.getElementById('order-phone').value,
+                address: document.getElementById('order-address').value,
+                trx: trxId,
+                date: new Date().toLocaleString()
+            });
+
+            // 2. تدمير الرقم (منع استخدامه مرة ثانية)
+            await ref.set("used");
+
+            alert("✅ تم تأكيد الأوردر! شكراً لك.");
+            document.getElementById('trx-id').value = "";
+        } else if(snap.val() === "used") {
+            alert("⚠️ هذا الرقم تم استخدامه مسبقاً!");
+        } else {
+            alert("❌ رقم غير صحيح أو لم يصل السيستم بعد.");
+        }
+    }
+
+    // --- لوحة المسؤول ---
+    function loadOrders() {
+        const list = document.getElementById('orders-list');
+        db.collection("Orders").orderBy("date", "desc").onSnapshot(snap => {
+            list.innerHTML = "";
+            snap.forEach(doc => {
+                const o = doc.data();
+                list.innerHTML += `
+                <div class="order-card">
+                    <div style="display:flex; justify-content:space-between">
+                        <b>💰 كود: ${o.trx}</b>
+                        <span class="status">جديد</span>
+                    </div>
+                    <p>🛍️ <b>المنتج:</b> ${o.items}</p>
+                    <p>👤 <b>العميل:</b> ${o.email}</p>
+                    <p>📞 <b>تواصل:</b> ${o.phone} | 📍 <b>عنوان:</b> ${o.address}</p>
+                    <small>📅 ${o.date}</small>
+                </div>`;
+            });
         });
     }
 </script>
-
 </body>
 </html>
