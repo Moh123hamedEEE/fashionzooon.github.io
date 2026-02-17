@@ -106,7 +106,7 @@
         try {
             const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
             const userDoc = await db.collection("Users").doc(result.user.uid).get();
-            if (!userDoc.exists()) {
+            if (!userDoc.exists) {
                 const { value: formValues } = await Swal.fire({
                     title: 'بيانات إضافية',
                     html: '<input id="swal-input1" class="swal2-input" placeholder="رقم الموبايل"><input id="swal-input2" class="swal2-input" placeholder="عنوان الشحن">',
