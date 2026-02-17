@@ -3,83 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fashion Zone | Pro System</title>
+    <title>Fashion Zone | المتجر المتكامل</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        :root { --main: #2d3436; --accent: #00b894; --danger: #d63031; --bg: #f0f2f5; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 10px; }
-        .container { max-width: 550px; margin: 30px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        :root { --gold: #d4af37; --dark: #1a1a1a; --white: #ffffff; --gray: #f4f4f4; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--gray); margin: 0; color: var(--dark); }
+        .container { max-width: 500px; margin: 30px auto; background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-top: 5px solid var(--gold); }
         .hidden { display: none !important; }
-        input, button { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
-        button { background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        button:hover { opacity: 0.85; transform: translateY(-1px); }
-        nav { display: flex; justify-content: space-around; margin-bottom: 25px; background: #eee; padding: 8px; border-radius: 12px; }
-        nav span { cursor: pointer; color: #555; padding: 8px 15px; border-radius: 8px; transition: 0.2s; }
-        nav span.active { background: white; color: var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .order-card { border-right: 5px solid var(--accent); padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #fff; border: 1px solid #eee; }
-        .status { font-size: 12px; padding: 3px 8px; border-radius: 5px; background: #e8f5e9; color: #2e7d32; }
+        input, button { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 16px; box-sizing: border-box; }
+        button { background: var(--dark); color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background: var(--gold); color: var(--dark); }
+        .google-btn { background: white; color: #444; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        nav { display: flex; justify-content: space-around; background: #eee; padding: 8px; border-radius: 12px; margin-bottom: 25px; }
+        nav span { cursor: pointer; padding: 8px 15px; border-radius: 8px; font-weight: bold; font-size: 14px; }
+        nav span.active { background: var(--gold); color: var(--dark); }
+        .order-card { background: #fff; border: 1px solid #eee; border-right: 5px solid var(--gold); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="text-align: center; color: var(--main);">Fashion Zone 👕</h2>
+    <h2 style="text-align:center">FASHION ZONE</h2>
     
     <nav id="main-nav" class="hidden">
         <span id="tab-user" class="active" onclick="showTab('user')">طلب أوردر</span>
-        <span id="tab-admin" class="hidden" onclick="showTab('admin')">لوحة المسؤول 🔒</span>
-        <span onclick="logout()" style="color: var(--danger);">خروج</span>
+        <span id="tab-admin" class="hidden" onclick="showTab('admin')">المدير 🔒</span>
+        <span onclick="logout()" style="color: #d63031;">خروج</span>
     </nav>
 
     <div id="auth-section">
-        <h3 id="auth-title">تسجيل دخول</h3>
+        <h3 id="auth-title" style="text-align:center">تسجيل الدخول</h3>
         <input type="email" id="email" placeholder="البريد الإلكتروني">
         <input type="password" id="pass" placeholder="كلمة المرور">
         
         <div id="extra-fields" class="hidden">
-            <input type="text" id="phone" placeholder="رقم الموبايل (أساسي)">
-            <input type="text" id="address" placeholder="عنوان الشحن (أساسي)">
+            <input type="text" id="phone" placeholder="رقم الموبايل">
+            <input type="text" id="address" placeholder="عنوان الشحن">
         </div>
 
         <button id="btn-login" onclick="login()">دخول</button>
-        <button id="btn-signup" class="hidden" onclick="signUp()">إنشاء الحساب</button>
-        
-        <p id="toggle-text" onclick="toggleAuth()" style="cursor:pointer; color: #0984e3; text-align: center; font-size: 14px; margin-top: 15px;">ليس لديك حساب؟ اشترك الآن</p>
+        <button id="btn-signup" class="hidden" onclick="signUp()">إنشاء حساب</button>
+        <button class="google-btn" onclick="loginWithGoogle()">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> الدخول بجوجل
+        </button>
+
+        <p id="toggle-text" onclick="toggleAuth()" style="text-align:center; cursor:pointer; color:blue; font-size:14px;">جديد؟ أنشئ حساب</p>
+        <p onclick="resetPasswordRequest()" style="text-align:center; cursor:pointer; color:gray; font-size:12px;">نسيت كلمة المرور؟</p>
     </div>
 
     <div id="user-section" class="hidden">
-        <p style="font-size: 14px; color: #666; text-align: center;">مرحباً! يمكنك تعديل بيانات هذا الطلب فقط إذا أردت.</p>
-        <input type="text" id="order-items" placeholder="اسم المنتج / اللون / المقاس">
-        <input type="text" id="order-phone" placeholder="رقم الموبايل لهذا الأوردر">
-        <input type="text" id="order-address" placeholder="عنوان الشحن لهذا الأوردر">
+        <input type="text" id="order-items" placeholder="ماذا تريد أن تطلب؟">
+        <input type="text" id="order-phone" placeholder="رقم الموبايل">
+        <input type="text" id="order-address" placeholder="عنوان التوصيل">
         <hr>
-        <p style="font-weight: bold;">تأكيد رقم المعاملة (Firebase):</p>
-        <input type="text" id="trx-id" placeholder="ادخل الرقم الظاهر في الرسالة">
-        <button onclick="submitOrder()">تأكيد وإرسال الطلب</button>
+        <input type="text" id="trx-id" placeholder="رقم العملية (Trx ID)">
+        <button onclick="submitOrder()">تأكيد وطلب الآن</button>
     </div>
 
     <div id="admin-section" class="hidden">
-        <h3 style="color: var(--danger);">لوحة تحكم المدير 🔒</h3>
-        <div id="orders-list">جاري تحميل أوردرات العملاء...</div>
+        <h3>الأوردرات المستلمة</h3>
+        <div id="orders-list">جاري التحميل...</div>
     </div>
 </div>
 
 <script>
-    // --- إعدادات فايربيس (تأكد من وضع بياناتك هنا) ---
     const firebaseConfig = {
         apiKey: "AIzaSyAaHWMwRlbZmbcJwQ1EXk0B9Yqt4VZ00cQ", 
+        authDomain: "fashion-zooon.firebaseapp.com",
         databaseURL: "https://fashion-zooon-default-rtdb.firebaseio.com",
         projectId: "fashion-zooon",
-        authDomain: "fashion-zooon.firebaseapp.com"
     };
-
-    // --- إيميل المدير ---
-    const ADMIN_EMAIL = "ham123mada2010@gmail.com"; // 👈 غير هذا لإيميلك
+    const ADMIN_EMAIL = "your-email@gmail.com"; // 👈 ضع إيميلك هنا
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
@@ -92,7 +92,6 @@
         document.getElementById('btn-login').classList.toggle('hidden');
         document.getElementById('btn-signup').classList.toggle('hidden');
         document.getElementById('auth-title').innerText = isLogin ? "حساب جديد" : "تسجيل دخول";
-        document.getElementById('toggle-text').innerText = isLogin ? "لديك حساب؟ سجل دخول" : "اشترك الآن";
     }
 
     function showTab(tab) {
@@ -103,39 +102,48 @@
         if(tab === 'admin') loadOrders();
     }
 
-    // --- تسجيل وحساب ---
+    async function loginWithGoogle() {
+        try {
+            const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+            const userDoc = await db.collection("Users").doc(result.user.uid).get();
+            if (!userDoc.exists()) {
+                const { value: formValues } = await Swal.fire({
+                    title: 'بيانات إضافية',
+                    html: '<input id="swal-input1" class="swal2-input" placeholder="رقم الموبايل"><input id="swal-input2" class="swal2-input" placeholder="عنوان الشحن">',
+                    focusConfirm: false,
+                    preConfirm: () => [document.getElementById('swal-input1').value, document.getElementById('swal-input2').value]
+                });
+                await db.collection("Users").doc(result.user.uid).set({ phone: formValues[0], address: formValues[1], email: result.user.email });
+            }
+            location.reload();
+        } catch (e) { Swal.fire('خطأ', e.message, 'error'); }
+    }
+
     function signUp() {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-        auth.createUserWithEmailAndPassword(email, pass).then(res => {
-            db.collection("Users").doc(res.user.uid).set({
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value
-            });
-            alert("تم الاشتراك بنجاح!");
-        }).catch(err => alert(err.message));
+        auth.createUserWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value).then(res => {
+            db.collection("Users").doc(res.user.uid).set({ phone: document.getElementById('phone').value, address: document.getElementById('address').value, email: res.user.email });
+            Swal.fire('نجاح', 'تم إنشاء الحساب', 'success');
+        }).catch(err => Swal.fire('خطأ', err.message, 'error'));
     }
 
     function login() {
+        auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value).catch(err => Swal.fire('خطأ', 'بيانات غير صحيحة', 'error'));
+    }
+
+    function resetPasswordRequest() {
         const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-        auth.signInWithEmailAndPassword(email, pass).catch(err => alert("بيانات خاطئة"));
+        if(!email) return Swal.fire('تنبيه', 'اكتب الإيميل أولاً', 'warning');
+        auth.sendPasswordResetEmail(email).then(() => Swal.fire('تم', 'تفقد إيميلك لاستعادة الباسورد', 'info'));
     }
 
     function logout() { auth.signOut().then(() => location.reload()); }
 
-    // --- مراقبة الدخول وتحديد الصلاحيات ---
     auth.onAuthStateChanged(user => {
         if (user) {
             document.getElementById('auth-section').classList.add('hidden');
             document.getElementById('main-nav').classList.remove('hidden');
             document.getElementById('user-section').classList.remove('hidden');
-            
-            // إظهار لوحة المدير للمدير فقط
-            if(user.email === ADMIN_EMAIL) {
-                document.getElementById('tab-admin').classList.remove('hidden');
-            }
-
+            if(user.email === ADMIN_EMAIL) document.getElementById('tab-admin').classList.remove('hidden');
             db.collection("Users").doc(user.uid).get().then(doc => {
                 if(doc.exists()){
                     document.getElementById('order-phone').value = doc.data().phone;
@@ -145,55 +153,31 @@
         }
     });
 
-    // --- إرسال الطلب ومنع التكرار ---
     async function submitOrder() {
-        const trxId = document.getElementById('trx-id').value;
-        if(!trxId) return alert("اكتب رقم العملية!");
-
-        const ref = rtdb.ref('' + trxId);
+        const trx = document.getElementById('trx-id').value;
+        const ref = rtdb.ref('' + trx);
         const snap = await ref.once('value');
-
         if(snap.exists() && snap.val() === "verified") {
-            // 1. حفظ في Firestore
             await db.collection("Orders").add({
                 email: auth.currentUser.email,
                 items: document.getElementById('order-items').value,
                 phone: document.getElementById('order-phone').value,
                 address: document.getElementById('order-address').value,
-                trx: trxId,
+                trx: trx,
                 date: new Date().toLocaleString()
             });
-
-            // 2. تدمير الرقم (منع استخدامه مرة ثانية)
-            await ref.set("used");
-
-            alert("✅ تم تأكيد الأوردر! شكراً لك.");
-            document.getElementById('trx-id').value = "";
-        } else if(snap.val() === "used") {
-            alert("⚠️ هذا الرقم تم استخدامه مسبقاً!");
-        } else {
-            alert("❌ رقم غير صحيح أو لم يصل السيستم بعد.");
-        }
+            await ref.set("used"); // منع التكرار
+            Swal.fire('ممتاز!', 'تم استلام الأوردر بنجاح', 'success');
+        } else { Swal.fire('فشل', 'رقم العملية غير صحيح أو مستخدم مسبقاً', 'error'); }
     }
 
-    // --- لوحة المسؤول ---
     function loadOrders() {
         const list = document.getElementById('orders-list');
         db.collection("Orders").orderBy("date", "desc").onSnapshot(snap => {
             list.innerHTML = "";
             snap.forEach(doc => {
                 const o = doc.data();
-                list.innerHTML += `
-                <div class="order-card">
-                    <div style="display:flex; justify-content:space-between">
-                        <b>💰 كود: ${o.trx}</b>
-                        <span class="status">جديد</span>
-                    </div>
-                    <p>🛍️ <b>المنتج:</b> ${o.items}</p>
-                    <p>👤 <b>العميل:</b> ${o.email}</p>
-                    <p>📞 <b>تواصل:</b> ${o.phone} | 📍 <b>عنوان:</b> ${o.address}</p>
-                    <small>📅 ${o.date}</small>
-                </div>`;
+                list.innerHTML += `<div class="order-card"><b>💰 كود: ${o.trx}</b><br>🛍️ ${o.items}<br>📞 ${o.phone}<br><small>${o.date}</small></div>`;
             });
         });
     }
