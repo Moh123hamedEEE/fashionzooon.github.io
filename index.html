@@ -103,22 +103,40 @@
     }
 
     async function loginWithGoogle() {
-        try {
-            const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-            const userDoc = await db.collection("Users").doc(result.user.uid).get();
-            if (!userDoc.exists) {
+    try {
+        const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        const user = result.user;
+        
+        // التعديل هنا: استخدام .then لضمان قراءة البيانات بشكل صحيح
+        db.collection("Users").doc(user.uid).get().then(async (doc) => {
+            if (!doc.exists) { // حذفنا الأقواس هنا أيضاً لضمان التوافق
                 const { value: formValues } = await Swal.fire({
                     title: 'بيانات إضافية',
                     html: '<input id="swal-input1" class="swal2-input" placeholder="رقم الموبايل"><input id="swal-input2" class="swal2-input" placeholder="عنوان الشحن">',
                     focusConfirm: false,
-                    preConfirm: () => [document.getElementById('swal-input1').value, document.getElementById('swal-input2').value]
+                    preConfirm: () => [
+                        document.getElementById('swal-input1').value,
+                        document.getElementById('swal-input2').value
+                    ]
                 });
-                await db.collection("Users").doc(result.user.uid).set({ phone: formValues[0], address: formValues[1], email: result.user.email });
+                
+                if (formValues) {
+                    await db.collection("Users").doc(user.uid).set({ 
+                        phone: formValues[0], 
+                        address: formValues[1], 
+                        email: user.email 
+                    });
+                }
             }
+            // تحديث الصفحة بعد نجاح الدخول
             location.reload();
-        } catch (e) { Swal.fire('خطأ', e.message, 'error'); }
-    }
+        });
 
+    } catch (e) { 
+        console.error(e);
+        Swal.fire('خطأ', e.message, 'error'); 
+    }
+}
     function signUp() {
         auth.createUserWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value).then(res => {
             db.collection("Users").doc(res.user.uid).set({ phone: document.getElementById('phone').value, address: document.getElementById('address').value, email: res.user.email });
